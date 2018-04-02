@@ -9,6 +9,7 @@
 
 enum type {P1=1,P2=2,P3=3};
 extern const uint64_t M_MASK;
+extern const char* M_PATH;
 extern const double a;
 extern const double b;
 extern const double c;
@@ -25,7 +26,7 @@ struct image{
 
 const char *getExt (const char *fspec);
 
-struct image*  PPM_convertor(const char *path);
+struct image* PPM_convertor(const char *path);
 
 struct image* Niveau_gris(const struct image* source, const double a, const double b, const double c);
 

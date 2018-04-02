@@ -1,6 +1,7 @@
 #include "image.h"
 
 const uint64_t M_MASK = 65535;
+const char* M_PATH="../Exemples/";
 
 void affiche_PPM(const struct image* image){
   uint64_t p1,p2,p3;                                                            //on déclare les 3 valeur d'un pixel
@@ -197,6 +198,53 @@ void affiche_noir_et_blanc(const struct image* image){
   else{
     printf("fonction affiche_Niveau_Gris appelée sur une image du mauvais format\n");
   }
+}
+
+
+void PPM_to_file(char * name,const struct image* source){
+
+	FILE *file = fopen( "../../Exemples/test.pbm" ,"w");
+
+
+	
+	switch(source->Pi){
+
+		case P1:
+			fprintf(file,"%s\n","P1");
+			break;
+		case P2:
+			fprintf(file,"%s\n","P2");
+			break;
+		case P3:
+			fprintf(file,"%s\n","P3");
+			break;
+		default:
+			printf("erreur ");
+			break;
+	}
+
+	fprintf(file,"%d ",source->largeur);
+	fprintf(file,"%d\n",source->hauteur);
+	fprintf(file,"%d\n",source->maxPixelValue);
+	
+	uint64_t p1,p2,p3;
+	for (int i = 0; i < source->hauteur; i++) {                                   
+    for (int j = 0; j < source->largeur; j++) {
+
+				p1 = (source->pixels[i][j] >> 32);
+        p2 = ((source->pixels[i][j] >> 16) & M_MASK);
+        p3 = (source->pixels[i][j] & M_MASK);
+		
+				fprintf(file,"%lu ",p1);
+				fprintf(file,"%lu ",p2);
+				fprintf(file,"%lu\t",p3);
+
+		}
+				fprintf(file,"%s","\n");
+	}
+
+
+	return ;
 }
 
 

@@ -26,5 +26,7 @@ int main(int argc , char** argv){
     affiche_noir_et_blanc(image_noir_et_blanc);
   }
 
+	PPM_to_file("test.pbm",image);
+
 
 }
