@@ -27,10 +27,16 @@ const char *getExt (const char *fspec);
 
 struct image*  PPM_convertor(const char *path);
 
-struct image* Niveau_gris(const struct image* source, double a, double b, double c);
+struct image* Niveau_gris(const struct image* source, const double a, const double b, const double c);
+
+struct image* noir_et_blanc(const struct image* source, const double alpha);
+
+void PPM_to_file(char * name,const struct image* source);
 
 void affiche_PPM(const struct image* image);
 
 void affiche_Niveau_Gris(const struct image* image);
+
+void affiche_noir_et_blanc(const struct image* image);
 
 #endif

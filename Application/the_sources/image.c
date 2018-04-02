@@ -97,7 +97,6 @@ struct image* Niveau_gris(const struct image* source, const double a, const doub
     }
 
     uint64_t p1,p2,p3;
-    printf("\n");
     for (int i = 0 ;  i < image->hauteur; i++) {                                //on parcours tout les pixel
       for (int j = 0; j < image->largeur; j++) {
 
@@ -105,7 +104,7 @@ struct image* Niveau_gris(const struct image* source, const double a, const doub
         p2 = b * ((source->pixels[i][j] >> 16) & M_MASK);
         p3 = c * (source->pixels[i][j] & M_MASK);
       
-        image->pixels[i][j] = p1+p2+p3;                                         //on affecte au pixel en cours la somme des p pour ne faire qu'un seul uint64_t
+        image->pixels[i][j] = p1+p2+p3;                                         //on affecte au pixel en cours la somme des p pour ne faire qu'un seul uint64_t 
       }
     }
     return image;
@@ -124,7 +123,7 @@ void affiche_Niveau_Gris(const struct image* image){
 
     for (int i = 0; i < image->hauteur; i++) {                                    //on parcours l'image en intégralité
       for (int j = 0; j < image->largeur; j++) {
-        printf("%" SCNu64" ", image->pixels[i][j]);                               //on affiche chaque valeur du pixel
+        printf("%" SCNu64" ", image->pixels[i][j]);                               //on affiche chaque valeur du pixel lmao
         printf("\t");
       }
       printf("\n");
@@ -133,5 +132,71 @@ void affiche_Niveau_Gris(const struct image* image){
   else{
     printf("fonction affiche_Niveau_Gris appelée sur une image du mauvais format\n");
   }
-
 }
+
+struct image* noir_et_blanc(const struct image* source, const double alpha){
+  if(source != NULL && source->Pi == P3){
+
+    struct image* image = malloc(sizeof(struct image));                         //on affecte l'espace mémoire nécessaire pour une image
+
+    image->Pi = P1;                                                             //on affecte P2 à notre image de niveau de gris
+    image->largeur = source->largeur;                                           //on affecte la meme largeur que la source
+    image->hauteur = source->hauteur;                                           //on affecte la meme hauteur que la source
+    image->maxPixelValue = source->maxPixelValue;                                //UTILE ??
+
+    image->pixels = malloc(sizeof(uint64_t)*image->hauteur);                    //on allou la mémoire pour le grand tableau de pixel
+
+    for (int z = 0; z < image->hauteur; z++) {                                  //pour chaque élement de la hauteur
+      image->pixels[z] = malloc(sizeof(uint64_t)*image->largeur);               //on allou la mémoire pour le sous tableau de la largeur
+
+    }
+
+    double p1,p2,p3;
+		double val;
+    for (int i = 0 ;  i < image->hauteur; i++) {                                //on parcours tout les pixel
+      for (int j = 0; j < image->largeur; j++) {
+
+        p1 = (source->pixels[i][j] >> 32);
+        p2 = ((source->pixels[i][j] >> 16) & M_MASK);
+        p3 = (source->pixels[i][j] & M_MASK);
+
+				val = (p1 * p2 * p3) /  (source->maxPixelValue * source->maxPixelValue * source->maxPixelValue );
+
+				printf("%f\n",val);
+
+				if (val > alpha){
+        	image->pixels[i][j] = 1; 
+				}else{
+        	image->pixels[i][j] = 0;
+				}
+      }
+    }
+    return image;
+  }
+  else{
+    printf("Erreur, l'image source n'existe pas\n");
+    return NULL;
+  }
+}
+
+
+void affiche_noir_et_blanc(const struct image* image){
+  if(image->Pi == 1){
+    printf("P1\n");
+    printf("%d %d\n",image->largeur,image->hauteur);                              //on affiche la largeur et la hauteur de l'image
+    printf("%d\n", image->maxPixelValue);
+
+    for (int i = 0; i < image->hauteur; i++) {                                    //on parcours l'image en intégralité
+      for (int j = 0; j < image->largeur; j++) {
+        printf("%" SCNu64" ", image->pixels[i][j]);                               //on affiche chaque valeur du pixel lmao
+        printf("\t");
+      }
+      printf("\n");
+    }
+  }
+  else{
+    printf("fonction affiche_Niveau_Gris appelée sur une image du mauvais format\n");
+  }
+}
+
+

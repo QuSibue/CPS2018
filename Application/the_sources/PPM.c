@@ -6,6 +6,7 @@
 const double a = 0.299;
 const double b = 0.587;
 const double c = 0.114;
+const double alpha = 0.2;
 
 
 int main(int argc , char** argv){
@@ -18,4 +19,12 @@ int main(int argc , char** argv){
     printf("\n\n");
     affiche_Niveau_Gris(image_gris);
   }
+
+	struct image* image_noir_et_blanc = noir_et_blanc(image,alpha);
+  if (image_noir_et_blanc){
+    printf("\n\n");
+    affiche_noir_et_blanc(image_noir_et_blanc);
+  }
+
+
 }
