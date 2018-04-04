@@ -45,7 +45,7 @@ struct image*  PPM_convertor(const char *path){                                 
     struct image* image = malloc(sizeof(struct image));                         //on affecte l'espace mémoire nécessaire pour une image
     char entete[3];                                                             //on déclare un tableau de char
     fscanf(file,"%s",entete);                                                   //on lit l'entete dans le fichier
-    printf("%s\n",entete);
+    //printf("%s\n",entete);
     if (strcmp(entete,"P3") != 0){                                              //si ce n'est pas P3 (pour PPM)
       printf("le fichier %s est corrompue\n",path);                             //probleme dans le fichier PPM
       free(image);
@@ -104,8 +104,8 @@ struct image* Niveau_gris(const struct image* source, const double a, const doub
         p1 = a * (source->pixels[i][j] >> 32);
         p2 = b * ((source->pixels[i][j] >> 16) & M_MASK);
         p3 = c * (source->pixels[i][j] & M_MASK);
-      
-        image->pixels[i][j] = p1+p2+p3;                                         //on affecte au pixel en cours la somme des p pour ne faire qu'un seul uint64_t 
+
+        image->pixels[i][j] = p1+p2+p3;                                         //on affecte au pixel en cours la somme des p pour ne faire qu'un seul uint64_t
       }
     }
     return image;
@@ -163,12 +163,12 @@ struct image* noir_et_blanc(const struct image* source, const double alpha){
 
 				val = (p1 * p2 * p3) /  (source->maxPixelValue * source->maxPixelValue * source->maxPixelValue );
 
-				printf("%f\n",val);
+				//printf("%f\n",val);
 
 				if (val > alpha){
-        	image->pixels[i][j] = 1; 
-				}else{
         	image->pixels[i][j] = 0;
+				}else{
+        	image->pixels[i][j] = 1;
 				}
       }
     }
@@ -196,27 +196,27 @@ void affiche_noir_et_blanc(const struct image* image){
     }
   }
   else{
-    printf("fonction affiche_Niveau_Gris appelée sur une image du mauvais format\n");
+    printf("fonction affiche_noir_et_blanc appelée sur une image du mauvais format\n");
   }
 }
 
 
 void PPM_to_file(char * name,const struct image* source){
 
-	FILE *file = fopen( "../../Exemples/test.pbm" ,"w");
+	FILE *file;
 
+  char path [160]="../../Exemples/";
+  strcat(path,name);
 
-	
 	switch(source->Pi){
 
 		case P1:
+      file  = fopen( path ,"w");
 			fprintf(file,"%s\n","P1");
 			break;
 		case P2:
+      file  = fopen(path ,"w");
 			fprintf(file,"%s\n","P2");
-			break;
-		case P3:
-			fprintf(file,"%s\n","P3");
 			break;
 		default:
 			printf("erreur ");
@@ -226,19 +226,11 @@ void PPM_to_file(char * name,const struct image* source){
 	fprintf(file,"%d ",source->largeur);
 	fprintf(file,"%d\n",source->hauteur);
 	fprintf(file,"%d\n",source->maxPixelValue);
-	
-	uint64_t p1,p2,p3;
-	for (int i = 0; i < source->hauteur; i++) {                                   
+
+
+	for (int i = 0; i < source->hauteur; i++) {
     for (int j = 0; j < source->largeur; j++) {
-
-				p1 = (source->pixels[i][j] >> 32);
-        p2 = ((source->pixels[i][j] >> 16) & M_MASK);
-        p3 = (source->pixels[i][j] & M_MASK);
-		
-				fprintf(file,"%lu ",p1);
-				fprintf(file,"%lu ",p2);
-				fprintf(file,"%lu\t",p3);
-
+				fprintf(file,"%lu\t",source->pixels[i][j]);
 		}
 				fprintf(file,"%s","\n");
 	}
@@ -246,5 +238,3 @@ void PPM_to_file(char * name,const struct image* source){
 
 	return ;
 }
-
-
